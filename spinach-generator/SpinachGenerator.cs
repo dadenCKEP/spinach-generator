@@ -13,30 +13,37 @@ namespace spinach_generator
 {
     public partial class Form1 : Form
     {
-        string nippo_base_path = "C:\\Users\\NakataKengo\\Documents\\";
+        // マイドキュメントのパス
+        string nippou_base_path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
         public Form1()
         {
             InitializeComponent();
+
+            // 日付表示の更新
             label_date.Text = DateTime.Now.ToString("yyyy/MM/dd");
+
+            // フォルダがないなら作成
+            if (!Directory.Exists(nippou_base_path + "\\日報")) Directory.CreateDirectory(nippou_base_path + "\\日報");
         }
 
         private void button_nippou_Click(object sender, EventArgs e)
         {
-            string nippo_path = nippo_base_path + "日報/" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
-            string nippo_yesterday_path = nippo_base_path + "日報/" + DateTime.Now.AddDays(-1).ToString("日報_yyyy_MM_dd") + ".md";
+            string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+            string nippou_yesterday_path = nippou_base_path + "\\日報\\" + DateTime.Now.AddDays(-1).ToString("日報_yyyy_MM_dd") + ".md";
             // 日報が既にあるなら開く
-            if (File.Exists(nippo_path))
+            if (File.Exists(nippou_path))
             {
-                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippo_path);
+                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippou_path);
             }
             else
             {
                 // ないならテンプレートから作成
                 // 前日の日報を探して予定を挿入
-                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippo_yesterday_path);
-                using (File.Create(nippo_path)) ;
-                p = System.Diagnostics.Process.Start(nippo_path);
+                // 一番若い日付を探す
+                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippou_yesterday_path);
+                using (File.Create(nippou_path)) ;
+                p = System.Diagnostics.Process.Start(nippou_path);
             }
         }
 
