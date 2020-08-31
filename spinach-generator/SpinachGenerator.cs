@@ -30,7 +30,6 @@ namespace spinach_generator
         private void button_nippou_Click(object sender, EventArgs e)
         {
             string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
-            string nippou_yesterday_path = nippou_base_path + "\\日報\\" + DateTime.Now.AddDays(-1).ToString("日報_yyyy_MM_dd") + ".md";
             // 日報が既にあるなら開く
             if (File.Exists(nippou_path))
             {
@@ -38,12 +37,41 @@ namespace spinach_generator
             }
             else
             {
-                // ないならテンプレートから作成
-                // 前日の日報を探して予定を挿入
                 // 一番若い日付を探す
-                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippou_yesterday_path);
-                using (File.Create(nippou_path)) ;
-                p = System.Diagnostics.Process.Start(nippou_path);
+                List<string> existNippouFiles = new List<string>();
+                existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
+                existNippouFiles.Sort();
+                string nippou_yesterday_path = existNippouFiles[existNippouFiles.Count - 1];
+
+                // 作成する
+                using (StreamWriter todayNippou = new StreamWriter(nippou_path, false))
+                {
+                    // 日付とかテンプレートを挿入
+                    todayNippou.WriteLine("# 日報 " + DateTime.Now.ToString("yyyy-MM-dd(ddd)"));
+                    todayNippou.WriteLine("## 作業");
+                    // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
+                    using (StreamReader yesterdayNippou = new StreamReader(nippou_yesterday_path))
+                    {
+                        string buffer = yesterdayNippou.ReadLine();
+                        while (buffer != null)
+                        {
+                            buffer = yesterdayNippou.ReadLine();
+                            if (buffer == "## 翌営業日の作業予定") break;
+                        }
+
+                        buffer = yesterdayNippou.ReadLine();
+                        while (buffer != null)
+                        {
+                            todayNippou.WriteLine(buffer);
+                            buffer = yesterdayNippou.ReadLine();
+                        }
+                    }
+                    todayNippou.WriteLine("");
+
+                    todayNippou.WriteLine("## 翌営業日の作業予定\n");
+                }
+
+                System.Diagnostics.Process.Start(nippou_path);
             }
         }
 
@@ -57,9 +85,21 @@ namespace spinach_generator
 
         private void button_nippo_cp_Click(object sender, EventArgs e)
         {
-            // あればクリップボードに入れる
-            // 完了表示
-            // なければ警告表示
+            string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+            // 日報が既にあるなら開く
+            if (File.Exists(nippou_path))
+            {
+                // あればクリップボードに入れる
+                StreamReader todayNippou = new StreamReader(nippou_path);
+                Clipboard.SetText(todayNippou.ReadToEnd());
+                // 完了表示
+                MessageBox.Show("クリップボードにコピーしました");
+            }
+            else
+            {
+                // なければ警告表示
+                MessageBox.Show("本日の日報がありませんでした");
+            }
         }
 
         private void button_shuho_cp_Click(object sender, EventArgs e)
