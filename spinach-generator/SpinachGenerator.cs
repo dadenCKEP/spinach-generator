@@ -33,7 +33,7 @@ namespace spinach_generator
             // 日報が既にあるなら開く
             if (File.Exists(nippou_path))
             {
-                System.Diagnostics.Process p = System.Diagnostics.Process.Start(nippou_path);
+                System.Diagnostics.Process.Start(nippou_path);
             }
             else
             {
