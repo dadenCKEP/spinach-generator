@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,9 +79,52 @@ namespace spinach_generator
         private void button_shuhou_Click(object sender, EventArgs e)
         {
             // 週報が既にあるなら開く
-            // ないならテンプレートから作成
-            // 今週分の日報の内容をすべて挿入
-            // 予定は最新の分だけ挿入
+            string shuhou_path = nippou_base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
+
+            // 日報が既にあるなら開く
+            if (File.Exists(shuhou_path))
+            {
+                System.Diagnostics.Process.Start(shuhou_path);
+            }
+            else
+            {
+                // ないならテンプレートから作成
+                using (StreamWriter todayShuuho = new StreamWriter(shuhou_path, false))
+                {
+                    // 日付とかテンプレートを挿入
+                    todayShuuho.WriteLine("週報 " + DateTime.Now.ToString("(yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
+                    todayShuuho.WriteLine("1. 総括\n");
+                    todayShuuho.WriteLine("2.今週の主な活動報告\n");
+                    // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
+                    for (int i = 0; i < (int)DateTime.Now.DayOfWeek; i++)
+                    {
+                        // 01234 → -4 -3 -2 -1 0
+                        // dayofweek-1で出せる？
+                        string tmp_shuhou_path = DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek + 1).ToString();
+                        using (StreamReader yesterdayNippou = new StreamReader(tmp_shuhou_path))
+                        {
+                            string buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                buffer = yesterdayNippou.ReadLine();
+                                if (buffer == "## 翌営業日の作業予定") break;
+                            }
+
+                            buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                todayShuuho.WriteLine(buffer);
+                                buffer = yesterdayNippou.ReadLine();
+                            }
+                        }
+                    }
+                    todayShuuho.WriteLine("3.次週の予定\n");
+
+                    todayShuuho.WriteLine("4.問題点\n\n5.提案・提言\n\n6.その他\n\n7.出張・イベント予定\n\n以上\n");
+                }
+
+                System.Diagnostics.Process.Start(shuhou_path);
+            }
         }
 
         private void button_nippo_cp_Click(object sender, EventArgs e)
@@ -104,9 +148,21 @@ namespace spinach_generator
 
         private void button_shuho_cp_Click(object sender, EventArgs e)
         {
-            // あればクリップボードに入れる
-            // 完了表示
-            // なければ警告表示
+            string shuuho_path = nippou_base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
+            // 日報が既にあるなら開く
+            if (File.Exists(shuuho_path))
+            {
+                // あればクリップボードに入れる
+                StreamReader todayShuuho = new StreamReader(shuuho_path);
+                Clipboard.SetText(todayShuuho.ReadToEnd());
+                // 完了表示
+                MessageBox.Show("クリップボードにコピーしました");
+            }
+            else
+            {
+                // なければ警告表示
+                MessageBox.Show("本日の週報がありませんでした");
+            }
         }
     }
 }
