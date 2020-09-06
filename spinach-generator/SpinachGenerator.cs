@@ -38,12 +38,6 @@ namespace spinach_generator
             }
             else
             {
-                // 一番若い日付を探す
-                List<string> existNippouFiles = new List<string>();
-                existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
-                existNippouFiles.Sort();
-                string nippou_yesterday_path = existNippouFiles[existNippouFiles.Count - 1];
-
                 // 作成する
                 using (StreamWriter todayNippou = new StreamWriter(nippou_path, false))
                 {
@@ -51,20 +45,28 @@ namespace spinach_generator
                     todayNippou.WriteLine("# 日報 " + DateTime.Now.ToString("yyyy-MM-dd(ddd)"));
                     todayNippou.WriteLine("## 作業");
                     // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
-                    using (StreamReader yesterdayNippou = new StreamReader(nippou_yesterday_path))
+                    // 一番若い日付を探す
+                    List<string> existNippouFiles = new List<string>();
+                    existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
+                    existNippouFiles.Sort();
+                    if (existNippouFiles.Count > 0)
                     {
-                        string buffer = yesterdayNippou.ReadLine();
-                        while (buffer != null)
+                        string nippou_yesterday_path = existNippouFiles[existNippouFiles.Count - 1];
+                        using (StreamReader yesterdayNippou = new StreamReader(nippou_yesterday_path))
                         {
-                            buffer = yesterdayNippou.ReadLine();
-                            if (buffer == "## 翌営業日の作業予定") break;
-                        }
+                            string buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                buffer = yesterdayNippou.ReadLine();
+                                if (buffer == "## 翌営業日の作業予定") break;
+                            }
 
-                        buffer = yesterdayNippou.ReadLine();
-                        while (buffer != null)
-                        {
-                            todayNippou.WriteLine(buffer);
                             buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                todayNippou.WriteLine(buffer);
+                                buffer = yesterdayNippou.ReadLine();
+                            }
                         }
                     }
                     todayNippou.WriteLine("");
