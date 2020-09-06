@@ -26,6 +26,7 @@ namespace spinach_generator
 
             // フォルダがないなら作成
             if (!Directory.Exists(nippou_base_path + "\\日報")) Directory.CreateDirectory(nippou_base_path + "\\日報");
+            if (!Directory.Exists(nippou_base_path + "\\週報")) Directory.CreateDirectory(nippou_base_path + "\\週報");
         }
 
         private void button_nippou_Click(object sender, EventArgs e)
