@@ -38,6 +38,11 @@ namespace spinach_generator
             }
             else
             {
+                // 今日の日報を作成する前に一番若い日付を探す
+                List<string> existNippouFiles = new List<string>();
+                existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
+                existNippouFiles.Sort();
+
                 // 作成する
                 using (StreamWriter todayNippou = new StreamWriter(nippou_path, false))
                 {
@@ -45,10 +50,6 @@ namespace spinach_generator
                     todayNippou.WriteLine("# 日報 " + DateTime.Now.ToString("yyyy-MM-dd(ddd)"));
                     todayNippou.WriteLine("## 作業");
                     // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
-                    // 一番若い日付を探す
-                    List<string> existNippouFiles = new List<string>();
-                    existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
-                    existNippouFiles.Sort();
                     if (existNippouFiles.Count > 0)
                     {
                         string nippou_yesterday_path = existNippouFiles[existNippouFiles.Count - 1];
