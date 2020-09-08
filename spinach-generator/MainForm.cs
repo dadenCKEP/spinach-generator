@@ -12,12 +12,12 @@ using System.Windows.Forms;
 
 namespace spinach_generator
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         // マイドキュメントのパス
         string nippou_base_path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 

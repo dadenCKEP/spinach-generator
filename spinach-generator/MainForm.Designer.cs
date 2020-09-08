@@ -1,6 +1,6 @@
 ﻿namespace spinach_generator
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.button_nippou = new System.Windows.Forms.Button();
             this.button_shuhou = new System.Windows.Forms.Button();
             this.label_date = new System.Windows.Forms.Label();

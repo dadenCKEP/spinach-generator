@@ -37,6 +37,8 @@ namespace spinach_generator
             if (!File.Exists(config_path))
             {
                 // なさそうなら専用フォームで作成
+                Settings settings = new Settings();
+                DialogResult result = settings.ShowDialog();
             }
 
             // 読み込み
@@ -47,7 +49,7 @@ namespace spinach_generator
             }
 
 
-            Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
     }
 }
