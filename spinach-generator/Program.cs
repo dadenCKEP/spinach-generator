@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.Json;
 
 namespace spinach_generator
 {
@@ -30,14 +32,22 @@ namespace spinach_generator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-        // 設定を読み込む
+            // 設定を読み込む
+            string config_path = "./config.json";
+            if (!File.Exists(config_path))
+            {
+                // なさそうなら専用フォームで作成
+            }
 
-        // なさそうなら専用フォームで聞く
+            // 読み込み
+            using (StreamReader todayNippou = new StreamReader(config_path))
+            {
+                string buffer = todayNippou.ReadToEnd();
+                nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+            }
 
-        // 
 
-
-        Application.Run(new Form1());
+            Application.Run(new Form1());
         }
-}
+    }
 }
