@@ -39,13 +39,17 @@ namespace spinach_generator
                 // なさそうなら専用フォームで作成
                 Settings settings = new Settings();
                 DialogResult result = settings.ShowDialog();
+                // 作成されずに閉じられたら終了
+                if (result == DialogResult.Cancel) return;
             }
-
-            // 読み込み
-            using (StreamReader todayNippou = new StreamReader(config_path))
+            else
             {
-                string buffer = todayNippou.ReadToEnd();
-                nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+                // 読み込み
+                using (StreamReader todayNippou = new StreamReader(config_path))
+                {
+                    string buffer = todayNippou.ReadToEnd();
+                    nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+                }
             }
 
 

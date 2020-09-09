@@ -29,47 +29,48 @@
         private void InitializeComponent()
         {
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.textBox_dirPath = new System.Windows.Forms.TextBox();
+            this.textBox_shuhouDir = new System.Windows.Forms.TextBox();
+            this.textBox_nippouDir = new System.Windows.Forms.TextBox();
+            this.button_selectDir = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button_create = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // textBox1
+            // textBox_dirPath
             // 
-            this.textBox1.Location = new System.Drawing.Point(116, 41);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(150, 19);
-            this.textBox1.TabIndex = 0;
+            this.textBox_dirPath.Location = new System.Drawing.Point(116, 41);
+            this.textBox_dirPath.Name = "textBox_dirPath";
+            this.textBox_dirPath.ReadOnly = true;
+            this.textBox_dirPath.Size = new System.Drawing.Size(150, 19);
+            this.textBox_dirPath.TabIndex = 0;
             // 
-            // textBox2
+            // textBox_shuhouDir
             // 
-            this.textBox2.Location = new System.Drawing.Point(116, 97);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(150, 19);
-            this.textBox2.TabIndex = 1;
+            this.textBox_shuhouDir.Location = new System.Drawing.Point(116, 97);
+            this.textBox_shuhouDir.Name = "textBox_shuhouDir";
+            this.textBox_shuhouDir.Size = new System.Drawing.Size(150, 19);
+            this.textBox_shuhouDir.TabIndex = 1;
             // 
-            // textBox3
+            // textBox_nippouDir
             // 
-            this.textBox3.Location = new System.Drawing.Point(116, 72);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(150, 19);
-            this.textBox3.TabIndex = 2;
+            this.textBox_nippouDir.Location = new System.Drawing.Point(116, 72);
+            this.textBox_nippouDir.Name = "textBox_nippouDir";
+            this.textBox_nippouDir.Size = new System.Drawing.Size(150, 19);
+            this.textBox_nippouDir.TabIndex = 2;
             // 
-            // button1
+            // button_selectDir
             // 
-            this.button1.Location = new System.Drawing.Point(272, 39);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "参照";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button_selectDir.Location = new System.Drawing.Point(272, 39);
+            this.button_selectDir.Name = "button_selectDir";
+            this.button_selectDir.Size = new System.Drawing.Size(75, 23);
+            this.button_selectDir.TabIndex = 3;
+            this.button_selectDir.Text = "参照";
+            this.button_selectDir.UseVisualStyleBackColor = true;
+            this.button_selectDir.Click += new System.EventHandler(this.button_selectDir_Click);
             // 
             // label1
             // 
@@ -98,14 +99,15 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "週報フォルダ名";
             // 
-            // button2
+            // button_create
             // 
-            this.button2.Location = new System.Drawing.Point(145, 126);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "作成";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button_create.Location = new System.Drawing.Point(145, 126);
+            this.button_create.Name = "button_create";
+            this.button_create.Size = new System.Drawing.Size(75, 23);
+            this.button_create.TabIndex = 7;
+            this.button_create.Text = "作成";
+            this.button_create.UseVisualStyleBackColor = true;
+            this.button_create.Click += new System.EventHandler(this.button_create_Click);
             // 
             // label4
             // 
@@ -123,18 +125,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 161);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button_create);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.button_selectDir);
+            this.Controls.Add(this.textBox_nippouDir);
+            this.Controls.Add(this.textBox_shuhouDir);
+            this.Controls.Add(this.textBox_dirPath);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Settings";
             this.Text = "Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,14 +146,14 @@
         #endregion
 
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox_dirPath;
+        private System.Windows.Forms.TextBox textBox_shuhouDir;
+        private System.Windows.Forms.TextBox textBox_nippouDir;
+        private System.Windows.Forms.Button button_selectDir;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_create;
         private System.Windows.Forms.Label label4;
     }
 }
