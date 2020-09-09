@@ -38,6 +38,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button_create = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox_userName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox_dirPath
@@ -101,7 +103,7 @@
             // 
             // button_create
             // 
-            this.button_create.Location = new System.Drawing.Point(145, 126);
+            this.button_create.Location = new System.Drawing.Point(153, 159);
             this.button_create.Name = "button_create";
             this.button_create.Size = new System.Drawing.Size(75, 23);
             this.button_create.TabIndex = 7;
@@ -119,11 +121,29 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "初期設定を行い、設定ファイルを作成します。";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 125);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(47, 12);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "ユーザ名";
+            // 
+            // textBox_userName
+            // 
+            this.textBox_userName.Location = new System.Drawing.Point(116, 122);
+            this.textBox_userName.Name = "textBox_userName";
+            this.textBox_userName.Size = new System.Drawing.Size(150, 19);
+            this.textBox_userName.TabIndex = 10;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 161);
+            this.ClientSize = new System.Drawing.Size(384, 212);
+            this.Controls.Add(this.textBox_userName);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button_create);
             this.Controls.Add(this.label3);
@@ -155,5 +175,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button_create;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox_userName;
     }
 }

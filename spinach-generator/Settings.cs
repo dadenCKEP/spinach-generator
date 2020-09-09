@@ -31,7 +31,7 @@ namespace spinach_generator
         {
             // バリデーション
             // 空欄がないかどうか
-            if (textBox_dirPath.Text == "" || textBox_nippouDir.Text == "" || textBox_shuhouDir.Text == "")
+            if (textBox_dirPath.Text == "" || textBox_nippouDir.Text == "" || textBox_shuhouDir.Text == "" || textBox_userName.Text == "")
             {
                 MessageBox.Show("全ての欄を埋める必要があります。");
                 priventClosing = true;
@@ -40,7 +40,8 @@ namespace spinach_generator
             // 格納
             Program.nippouSettings.nippouBasePath = textBox_dirPath.Text;
             Program.nippouSettings.nippouDirName = textBox_nippouDir.Text;
-            Program.nippouSettings.nippouBasePath = textBox_shuhouDir.Text;
+            Program.nippouSettings.shuhouDirName = textBox_shuhouDir.Text;
+            Program.nippouSettings.userName = textBox_userName.Text;
 
             // ファイル書き出し
             using (StreamWriter sw = new StreamWriter("./config.json", false))
