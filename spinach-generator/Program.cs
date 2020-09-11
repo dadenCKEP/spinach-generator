@@ -48,7 +48,15 @@ namespace spinach_generator
                 using (StreamReader todayNippou = new StreamReader(config_path))
                 {
                     string buffer = todayNippou.ReadToEnd();
-                    nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+                    try
+                    {
+                        nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("設定ファイルが破損しています。削除して再起動することで再設定できます。");
+                        return;
+                    }
                 }
             }
 
