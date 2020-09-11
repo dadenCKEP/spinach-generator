@@ -102,7 +102,7 @@ namespace spinach_generator
                 using (StreamWriter todayShuuho = new StreamWriter(shuhou_path, false))
                 {
                     // 日付とかテンプレートを挿入
-                    todayShuuho.WriteLine("週報 " + DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + 1).ToString("(yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
+                    todayShuuho.WriteLine("週報 (" + Program.nippouSettings.userName + ":" + DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + 1).ToString("yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
                     todayShuuho.WriteLine("1. 総括\n");
                     todayShuuho.WriteLine("2. 今週の主な活動報告\n");
                     // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
