@@ -55,7 +55,7 @@
             this.textBox_shuhouDir.Location = new System.Drawing.Point(116, 97);
             this.textBox_shuhouDir.Name = "textBox_shuhouDir";
             this.textBox_shuhouDir.Size = new System.Drawing.Size(150, 19);
-            this.textBox_shuhouDir.TabIndex = 1;
+            this.textBox_shuhouDir.TabIndex = 3;
             // 
             // textBox_nippouDir
             // 
@@ -69,7 +69,7 @@
             this.button_selectDir.Location = new System.Drawing.Point(272, 39);
             this.button_selectDir.Name = "button_selectDir";
             this.button_selectDir.Size = new System.Drawing.Size(75, 23);
-            this.button_selectDir.TabIndex = 3;
+            this.button_selectDir.TabIndex = 1;
             this.button_selectDir.Text = "参照";
             this.button_selectDir.UseVisualStyleBackColor = true;
             this.button_selectDir.Click += new System.EventHandler(this.button_selectDir_Click);
@@ -80,7 +80,7 @@
             this.label1.Location = new System.Drawing.Point(12, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(98, 12);
-            this.label1.TabIndex = 4;
+            this.label1.TabIndex = 7;
             this.label1.Text = "フォルダの設置場所";
             // 
             // label2
@@ -89,7 +89,7 @@
             this.label2.Location = new System.Drawing.Point(12, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 12);
-            this.label2.TabIndex = 5;
+            this.label2.TabIndex = 8;
             this.label2.Text = "日報フォルダ名";
             // 
             // label3
@@ -98,7 +98,7 @@
             this.label3.Location = new System.Drawing.Point(12, 100);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 12);
-            this.label3.TabIndex = 6;
+            this.label3.TabIndex = 9;
             this.label3.Text = "週報フォルダ名";
             // 
             // button_create
@@ -106,7 +106,7 @@
             this.button_create.Location = new System.Drawing.Point(153, 159);
             this.button_create.Name = "button_create";
             this.button_create.Size = new System.Drawing.Size(75, 23);
-            this.button_create.TabIndex = 7;
+            this.button_create.TabIndex = 5;
             this.button_create.Text = "作成";
             this.button_create.UseVisualStyleBackColor = true;
             this.button_create.Click += new System.EventHandler(this.button_create_Click);
@@ -118,7 +118,7 @@
             this.label4.Location = new System.Drawing.Point(12, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(294, 16);
-            this.label4.TabIndex = 8;
+            this.label4.TabIndex = 6;
             this.label4.Text = "初期設定を行い、設定ファイルを作成します。";
             // 
             // label5
@@ -127,7 +127,7 @@
             this.label5.Location = new System.Drawing.Point(12, 125);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 12);
-            this.label5.TabIndex = 9;
+            this.label5.TabIndex = 10;
             this.label5.Text = "ユーザ名";
             // 
             // textBox_userName
@@ -135,7 +135,7 @@
             this.textBox_userName.Location = new System.Drawing.Point(116, 122);
             this.textBox_userName.Name = "textBox_userName";
             this.textBox_userName.Size = new System.Drawing.Size(150, 19);
-            this.textBox_userName.TabIndex = 10;
+            this.textBox_userName.TabIndex = 4;
             // 
             // Settings
             // 
