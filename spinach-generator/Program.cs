@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.Json;
+using System.Text.Encodings.Web;
 
 namespace spinach_generator
 {
@@ -30,14 +33,41 @@ namespace spinach_generator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-        // 設定を読み込む
+            // 設定を読み込む
+            string config_path = "./config.json";
+            if (!File.Exists(config_path))
+            {
+                // なさそうなら専用フォームで作成
+                Settings settings = new Settings();
+                DialogResult result = settings.ShowDialog();
+                // 作成されずに閉じられたら終了
+                if (result == DialogResult.Cancel) return;
+            }
+            else
+            {
+                // 読み込み
+                using (StreamReader todayNippou = new StreamReader(config_path))
+                {
+                    string buffer = todayNippou.ReadToEnd();
+                    var options = new JsonSerializerOptions
+                    {
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        WriteIndented = true
+                    };
+                    try
+                    {
+                        nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer, options);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("設定ファイルが破損しています。削除して再起動することで再設定できます。");
+                        return;
+                    }
+                }
+            }
 
-        // なさそうなら専用フォームで聞く
 
-        // 
-
-
-        Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
-}
+    }
 }
