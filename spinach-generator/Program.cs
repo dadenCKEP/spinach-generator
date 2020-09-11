@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
+using System.Text.Encodings.Web;
 
 namespace spinach_generator
 {
@@ -48,9 +49,14 @@ namespace spinach_generator
                 using (StreamReader todayNippou = new StreamReader(config_path))
                 {
                     string buffer = todayNippou.ReadToEnd();
+                    var options = new JsonSerializerOptions
+                    {
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        WriteIndented = true
+                    };
                     try
                     {
-                        nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer);
+                        nippouSettings = JsonSerializer.Deserialize<NippouSettings>(buffer, options);
                     }
                     catch (Exception)
                     {

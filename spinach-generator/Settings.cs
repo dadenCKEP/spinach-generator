@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -44,9 +45,14 @@ namespace spinach_generator
             Program.nippouSettings.userName = textBox_userName.Text;
 
             // ファイル書き出し
+            var options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                WriteIndented = true
+            };
             using (StreamWriter sw = new StreamWriter("./config.json", false))
             {
-                sw.Write(JsonSerializer.Serialize(Program.nippouSettings));
+                sw.Write(JsonSerializer.Serialize(Program.nippouSettings, options));
             }
 
             // 問題ない場合はOKを送出
