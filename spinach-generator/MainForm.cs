@@ -15,37 +15,39 @@ namespace spinach_generator
     public partial class MainForm : Form
     {
         // マイドキュメントのパス
-        string nippou_base_path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        string base_path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
         public MainForm()
         {
             InitializeComponent();
 
-            // 日付表示の更新
+            // UI上の日付表示の更新
             label_date.Text = DateTime.Now.ToString("yyyy/MM/dd");
 
-            // フォルダがないなら作成
-            if (!Directory.Exists(nippou_base_path + "\\日報")) Directory.CreateDirectory(nippou_base_path + "\\日報");
-            if (!Directory.Exists(nippou_base_path + "\\週報")) Directory.CreateDirectory(nippou_base_path + "\\週報");
+            // 日報・週報の保存フォルダがないなら作成
+            if (!Directory.Exists(base_path + "\\日報")) Directory.CreateDirectory(base_path + "\\日報");
+            if (!Directory.Exists(base_path + "\\週報")) Directory.CreateDirectory(base_path + "\\週報");
         }
 
         private void button_nippou_Click(object sender, EventArgs e)
         {
-            string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+            // 本日の日報
+            string nippou_today_path = base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+
             // 日報が既にあるなら開く
-            if (File.Exists(nippou_path))
+            if (File.Exists(nippou_today_path))
             {
-                System.Diagnostics.Process.Start(nippou_path);
+                System.Diagnostics.Process.Start(nippou_today_path);
             }
             else
             {
                 // 今日の日報を作成する前に一番若い日付を探す
                 List<string> existNippouFiles = new List<string>();
-                existNippouFiles.AddRange(Directory.GetFiles(nippou_base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
+                existNippouFiles.AddRange(Directory.GetFiles(base_path + "\\日報\\", "*.md", SearchOption.TopDirectoryOnly));
                 existNippouFiles.Sort();
 
                 // 作成する
-                using (StreamWriter todayNippou = new StreamWriter(nippou_path, false))
+                using (StreamWriter todayNippou = new StreamWriter(nippou_today_path, false))
                 {
                     // 日付とかテンプレートを挿入
                     todayNippou.WriteLine("# 日報 " + DateTime.Now.ToString("yyyy-MM-dd(ddd)"));
@@ -76,14 +78,14 @@ namespace spinach_generator
                     todayNippou.WriteLine("## 翌営業日の作業予定\n");
                 }
 
-                System.Diagnostics.Process.Start(nippou_path);
+                System.Diagnostics.Process.Start(nippou_today_path);
             }
         }
 
         private void button_shuhou_Click(object sender, EventArgs e)
         {
             // 本日分の日報がない場合は一応警告を出す
-            string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+            string nippou_path = base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
             if (!File.Exists(nippou_path))
             {
                 DialogResult result = MessageBox.Show("本日分の日報がありません。続けますか？", "注意", MessageBoxButtons.OKCancel);
@@ -91,7 +93,7 @@ namespace spinach_generator
             }
 
             // 週報が既にあるなら開く
-            string shuhou_path = nippou_base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
+            string shuhou_path = base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
             if (File.Exists(shuhou_path))
             {
                 System.Diagnostics.Process.Start(shuhou_path);
@@ -110,7 +112,7 @@ namespace spinach_generator
                     {
                         // 01234 → -4 -3 -2 -1 0
                         // dayofweek-1で出せる？
-                        string tmp_shuhou_path = nippou_base_path + "\\日報\\" + DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek + 1).ToString("日報_yyyy_MM_dd") + ".md";
+                        string tmp_shuhou_path = base_path + "\\日報\\" + DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek + 1).ToString("日報_yyyy_MM_dd") + ".md";
                         if (File.Exists(tmp_shuhou_path))
                         {
                             using (StreamReader yesterdayNippou = new StreamReader(tmp_shuhou_path))
@@ -149,7 +151,7 @@ namespace spinach_generator
 
         private void button_nippo_cp_Click(object sender, EventArgs e)
         {
-            string nippou_path = nippou_base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
+            string nippou_path = base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
             // 日報が既にあるなら開く
             if (File.Exists(nippou_path))
             {
@@ -168,7 +170,7 @@ namespace spinach_generator
 
         private void button_shuho_cp_Click(object sender, EventArgs e)
         {
-            string shuuho_path = nippou_base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
+            string shuuho_path = base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
             // 日報が既にあるなら開く
             if (File.Exists(shuuho_path))
             {
