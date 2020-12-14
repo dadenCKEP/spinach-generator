@@ -88,65 +88,79 @@ namespace spinach_generator
             string nippou_path = base_path + "\\日報\\" + DateTime.Now.ToString("日報_yyyy_MM_dd") + ".md";
             if (!File.Exists(nippou_path))
             {
+                // 警告表示でどうするか尋ねる
                 DialogResult result = MessageBox.Show("本日分の日報がありません。続けますか？", "注意", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.Cancel) return;
             }
 
-            // 週報が既にあるなら開く
-            string shuhou_path = base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
-            if (File.Exists(shuhou_path))
+            // 前週の週報がない場合は前週週報作成モード
+            // ここでshuhou_pathをどうするか決める
+            string shuhou_forgotten_path = base_path + "\\週報\\" + DateTime.Now.AddDays(-(2 + (int)DateTime.Now.DayOfWeek)).ToString("週報_yyyy_MM_dd") + ".md";
+            string shuhou_path;
+            if (!File.Exists(shuhou_forgotten_path))
             {
-                System.Diagnostics.Process.Start(shuhou_path);
+                // 前週分がない
+                MessageBox.Show("前週の週報がありませんでした。先にそちらを作成します。");
+                shuhou_path = shuhou_forgotten_path;
             }
             else
             {
-                // ないならテンプレートから作成
-                using (StreamWriter todayShuuho = new StreamWriter(shuhou_path, false))
+                // 前週分がちゃんとある→今週分
+                shuhou_path = base_path + "\\週報\\" + DateTime.Now.ToString("週報_yyyy_MM_dd") + ".md";
+                // 週報が既にあるなら開く
+                if (File.Exists(shuhou_path))
                 {
-                    // 日付とかテンプレートを挿入
-                    todayShuuho.WriteLine("週報 (" + Program.nippouSettings.userName + ":" + DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + 1).ToString("yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
-                    todayShuuho.WriteLine("1. 総括\n");
-                    todayShuuho.WriteLine("2. 今週の主な活動報告\n");
-                    // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
-                    for (int i = 0; i < (int)DateTime.Now.DayOfWeek; i++)
-                    {
-                        // 01234 → -4 -3 -2 -1 0
-                        // dayofweek-1で出せる？
-                        string tmp_shuhou_path = base_path + "\\日報\\" + DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek + 1).ToString("日報_yyyy_MM_dd") + ".md";
-                        if (File.Exists(tmp_shuhou_path))
-                        {
-                            using (StreamReader yesterdayNippou = new StreamReader(tmp_shuhou_path))
-                            {
-                                // まず2行すてる
-                                yesterdayNippou.ReadLine();
-                                yesterdayNippou.ReadLine();
+                    System.Diagnostics.Process.Start(shuhou_path);
+                    return;
+                }
+            }
 
-                                string buffer = yesterdayNippou.ReadLine();
+            // テンプレートから作成
+            using (StreamWriter todayShuuho = new StreamWriter(shuhou_path, false))
+            {
+                // 日付とかテンプレートを挿入
+                todayShuuho.WriteLine("週報 (" + Program.nippouSettings.userName + ":" + DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + 1).ToString("yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
+                todayShuuho.WriteLine("1. 総括\n");
+                todayShuuho.WriteLine("2. 今週の主な活動報告\n");
+                // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
+                for (int i = 0; i < (int)DateTime.Now.DayOfWeek; i++)
+                {
+                    // 01234 → -4 -3 -2 -1 0
+                    // dayofweek-1で出せる？
+                    string tmp_shuhou_path = base_path + "\\日報\\" + DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek + 1).ToString("日報_yyyy_MM_dd") + ".md";
+                    if (File.Exists(tmp_shuhou_path))
+                    {
+                        using (StreamReader yesterdayNippou = new StreamReader(tmp_shuhou_path))
+                        {
+                            // まず2行すてる
+                            yesterdayNippou.ReadLine();
+                            yesterdayNippou.ReadLine();
+
+                            string buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                todayShuuho.WriteLine(buffer);
+                                buffer = yesterdayNippou.ReadLine();
+                                if (buffer == "## 翌営業日の作業予定") break;
+                            }
+                            if (i == (int)DateTime.Now.DayOfWeek - 1)
+                            {
+                                todayShuuho.WriteLine("3. 次週の予定\n");
+                                buffer = yesterdayNippou.ReadLine();
                                 while (buffer != null)
                                 {
                                     todayShuuho.WriteLine(buffer);
                                     buffer = yesterdayNippou.ReadLine();
-                                    if (buffer == "## 翌営業日の作業予定") break;
-                                }
-                                if (i == (int)DateTime.Now.DayOfWeek - 1)
-                                {
-                                    todayShuuho.WriteLine("3. 次週の予定\n");
-                                    buffer = yesterdayNippou.ReadLine();
-                                    while (buffer != null)
-                                    {
-                                        todayShuuho.WriteLine(buffer);
-                                        buffer = yesterdayNippou.ReadLine();
-                                    }
                                 }
                             }
                         }
                     }
-
-                    todayShuuho.WriteLine("4. 問題点\n\n5. 提案・提言\n\n6. その他\n\n7. 出張・イベント予定\n\n以上\n");
                 }
 
-                System.Diagnostics.Process.Start(shuhou_path);
+                todayShuuho.WriteLine("4. 問題点\n\n5. 提案・提言\n\n6. その他\n\n7. 出張・イベント予定\n\n以上\n");
             }
+
+            System.Diagnostics.Process.Start(shuhou_path);
         }
 
         private void button_nippo_cp_Click(object sender, EventArgs e)
