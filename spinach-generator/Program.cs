@@ -11,9 +11,24 @@ namespace spinach_generator
 {
     public class NippouSettings
     {
+        /// <summary>
+        /// 日報フォルダの配置先パス
+        /// </summary>
         public string nippouBasePath { get; set; }
+
+        /// <summary>
+        /// 日報ディレクトリ名
+        /// </summary>
         public string nippouDirName { get; set; }
+
+        /// <summary>
+        /// 週報ディレクトリ名
+        /// </summary>
         public string shuhouDirName { get; set; }
+
+        /// <summary>
+        /// 日報に載せる名前
+        /// </summary>
         public string userName { get; set; }
     }
 
@@ -24,7 +39,7 @@ namespace spinach_generator
         /// </summary>
         /// 
 
-        // 個人設定
+        // 個人設定の初期化
         public static NippouSettings nippouSettings = new NippouSettings();
 
         [STAThread]
@@ -33,25 +48,26 @@ namespace spinach_generator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // 設定を読み込む
+            // 個人設定をファイルから読み込む
             string config_path = "./config.json";
             if (!File.Exists(config_path))
             {
-                // なさそうなら専用フォームで作成
+                // 個人設定ファイルがなさそうなら専用フォームで作成
                 Settings settings = new Settings();
                 DialogResult result = settings.ShowDialog();
-                // 作成されずに閉じられたら終了
+                // 個人設定が作成されずに閉じられたらソフトウェアを終了
                 if (result == DialogResult.Cancel) return;
             }
             else
             {
-                // 読み込み
+                // 個人設定ファイルの読み込み
                 using (StreamReader todayNippou = new StreamReader(config_path))
                 {
+                    // 文字列ベースでファイルを読み込んでJSONシリアライザで処理
                     string buffer = todayNippou.ReadToEnd();
                     var options = new JsonSerializerOptions
                     {
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        // Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                         WriteIndented = true
                     };
                     try
@@ -60,6 +76,7 @@ namespace spinach_generator
                     }
                     catch (Exception)
                     {
+                        // 設定ファイルが破損している場合はメッセージを表示して終了
                         MessageBox.Show("設定ファイルが破損しています。削除して再起動することで再設定できます。");
                         return;
                     }
