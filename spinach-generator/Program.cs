@@ -84,6 +84,26 @@ namespace spinach_generator
             }
 
 
+            // 個人設定をファイルから読み込む
+            string template_path = "./template.txt";
+            if (!File.Exists(template_path))
+            {
+                // TODO: テンプレートをでっち上げたい
+                MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                return;
+            }
+            else
+            {
+                // テンプレートを読み込む
+                using (StreamReader template = new StreamReader(config_path))
+                {
+                    // 文字列ベースでファイルを読み込む
+                    string buffer = template.ReadToEnd();
+
+                    // TODO: ファイルから構造を解釈する
+                }
+            }
+
             Application.Run(new MainForm());
         }
     }
