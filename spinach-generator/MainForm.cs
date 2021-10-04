@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace spinach_generator
 {
@@ -50,11 +51,18 @@ namespace spinach_generator
                 // 作成する
                 using (StreamWriter todayNippou = new StreamWriter(nippou_path, false))
                 {
-                    // 日付とかテンプレートを挿入
-                    todayNippou.WriteLine("# 日報 " + DateTime.Now.ToString("yyyy-MM-dd(ddd)"));
-                    todayNippou.WriteLine("## 作業");
+                    // テンプレートを一旦書き出す
+                    string nippouTemp = Program.nippouTemplate.template;
+
+                    // <date>を置き換える
+                    nippouTemp = nippouTemp.Replace("<date />", DateTime.Now.ToString("yyyy-MM-dd"));
+
+                    // <name>を置き換える
+                    nippouTemp = nippouTemp.Replace("<name />", Program.nippouSettings.userName);
+
                     // すでにある日報の中で一番新しいものを探し、
                     // その日報の「翌営業日の作業予定」から本日の作業を生成する
+                    string yesterday_nippou_tomorrow = "";
                     if (existNippouFiles.Count > 0)
                     {
                         string path_nippou_yesterday = existNippouFiles[existNippouFiles.Count - 1];
@@ -64,20 +72,26 @@ namespace spinach_generator
                             while (buffer != null)
                             {
                                 buffer = yesterdayNippou.ReadLine();
-                                if (buffer == "## 翌営業日の作業予定") break;
+                                if (buffer == Program.nippouTemplate.h_tomorrow) break;
                             }
 
                             buffer = yesterdayNippou.ReadLine();
-                            while (buffer != null)
+                            while (buffer != null && buffer != Program.nippouTemplate.h_other)
                             {
-                                todayNippou.WriteLine(buffer);
+                                yesterday_nippou_tomorrow += buffer + "\r\n";
                                 buffer = yesterdayNippou.ReadLine();
                             }
                         }
                     }
+                    nippouTemp = nippouTemp.Replace("<today />", yesterday_nippou_tomorrow);
 
-                    // 空行と翌営業日の作業予定見出しを入れる
-                    todayNippou.WriteLine("\n## 翌営業日の作業予定\n");
+                    // 不要なタグを消す
+                    nippouTemp = nippouTemp.Replace("<h_today>", "").Replace("</h_today>", "");
+                    nippouTemp = nippouTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
+                    nippouTemp = nippouTemp.Replace("<h_other>", "").Replace("</h_other>", "");
+
+                    // 書き出す
+                    todayNippou.Write(nippouTemp);
                 }
             }
 
