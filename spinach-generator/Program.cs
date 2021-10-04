@@ -158,7 +158,7 @@ namespace spinach_generator
                     match = rx.Match(nippouTemplate.template);
                     if (match.Success)
                     {
-                        nippouTemplate.h_today = match.Groups[1].Value;
+                        nippouTemplate.h_other = match.Groups[1].Value;
                     }
                     else
                     {
