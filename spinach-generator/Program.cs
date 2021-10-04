@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 
 namespace spinach_generator
 {
@@ -32,6 +33,29 @@ namespace spinach_generator
         public string userName { get; set; }
     }
 
+    public class NippouTemplate
+    {
+        /// <summary>
+        /// テンプレート全体
+        /// </summary>
+        public string template;
+
+        /// <summary>
+        /// 本日の活動報告の見出し行(識別用)
+        /// </summary>
+        public string h_today;
+
+        /// <summary>
+        /// 翌日の予定の見出し行(識別用)
+        /// </summary>
+        public string h_tomorrow;
+
+        /// <summary>
+        /// その他の見出し行(識別用)
+        /// </summary>
+        public string h_other;
+    }
+
     static class Program
     {
         /// <summary>
@@ -41,6 +65,8 @@ namespace spinach_generator
 
         // 個人設定の初期化
         public static NippouSettings nippouSettings = new NippouSettings();
+        public static NippouTemplate nippouTemplate = new NippouTemplate();
+
 
         [STAThread]
         static void Main()
@@ -95,12 +121,50 @@ namespace spinach_generator
             else
             {
                 // テンプレートを読み込む
-                using (StreamReader template = new StreamReader(config_path))
+                using (StreamReader template = new StreamReader(template_path))
                 {
                     // 文字列ベースでファイルを読み込む
-                    string buffer = template.ReadToEnd();
+                    nippouTemplate.template = template.ReadToEnd();
 
-                    // TODO: ファイルから構造を解釈する
+                    // ファイルから構造を解釈する
+                    // 本日の活動報告の見出し
+                    Regex rx = new Regex(@"<h_today>(.*)</h_today>", RegexOptions.IgnoreCase);
+                    Match match = rx.Match(nippouTemplate.template);
+                    if (match.Success)
+                    {
+                        nippouTemplate.h_today = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                        return;
+                    }
+
+                    // 翌日の予定の見出し
+                    rx = new Regex(@"<h_tomorrow>(.*)</h_tomorrow>", RegexOptions.IgnoreCase);
+                    match = rx.Match(nippouTemplate.template);
+                    if (match.Success)
+                    {
+                        nippouTemplate.h_tomorrow = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                        return;
+                    }
+
+                    // その他の見出し行
+                    rx = new Regex(@"<h_other>(.*)</h_other>", RegexOptions.IgnoreCase);
+                    match = rx.Match(nippouTemplate.template);
+                    if (match.Success)
+                    {
+                        nippouTemplate.h_today = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                        return;
+                    }
                 }
             }
 
