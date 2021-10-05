@@ -8,14 +8,13 @@ XMLライクなテンプレートを作成する必要がある。
 日報(<date />: <name />)
 
 本文:
-<date />: <name />
-
-<h_today>1. 本⽇の活動報告</h_today>
+#日報 <date />
+<h_today>## 1. 本⽇の活動報告</h_today>
 <today />
 
-<h_tomorrow>2. 翌⽇の予定</h_tomorrow>
+<h_tomorrow>## 2. 翌⽇の予定</h_tomorrow>
 
-<h_other>3. その他</h_other>
+<h_other>## 3. その他</h_other>
 
 以上
 ```
