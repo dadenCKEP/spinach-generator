@@ -7,6 +7,7 @@
 <today />
 
 <h_tomorrow>## 2. 翌⽇の予定</h_tomorrow>
+<tomorrow />
 
 <h_other>## 3. その他</h_other>
 

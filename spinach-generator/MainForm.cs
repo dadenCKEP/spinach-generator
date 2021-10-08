@@ -89,6 +89,7 @@ namespace spinach_generator
                     nippouTemp = nippouTemp.Replace("<h_today>", "").Replace("</h_today>", "");
                     nippouTemp = nippouTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
                     nippouTemp = nippouTemp.Replace("<h_other>", "").Replace("</h_other>", "");
+                    nippouTemp = nippouTemp.Replace("<tomorrow />", "");
 
                     // 書き出す
                     todayNippou.Write(nippouTemp);
@@ -125,49 +126,63 @@ namespace spinach_generator
 
                 using (StreamWriter todayShuuho = new StreamWriter(shuhou_path, false))
                 {
-                    // 日付とかテンプレートを挿入
-                    todayShuuho.WriteLine("週報 (" + Program.nippouSettings.userName + ":" + ThisMonday.ToString("yyyy-MM-dd ～ ") + DateTime.Now.ToString("yyyy-MM-dd)"));
-                    todayShuuho.WriteLine("1. 総括\n");
-                    todayShuuho.WriteLine("2. 今週の主な活動報告\n");
+                    // テンプレートを一旦書き出す
+                    string shuhoTemp = Program.nippouTemplate.template;
+
+                    // <date>を置き換える
+                    shuhoTemp = shuhoTemp.Replace("<date />", DateTime.Now.ToString("yyyy-MM-dd"));
+
+                    // <name>を置き換える
+                    shuhoTemp = shuhoTemp.Replace("<name />", Program.nippouSettings.userName);
+
                     // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
+                    string nippou_buffer = "";
                     for (int i = 0; i < ThisWeekLength; i++)
                     {
-                        // 今週のi日目の週報を参照
-                        string tmp_shuhou_path = Program.nippouSettings.nippouBasePath + "\\日報\\" + ThisMonday.AddDays(i).ToString("日報_yyyy_MM_dd") + ".md";
+                        // 今週のi日目の日報を参照
+                        string tmp_shuhou_path = Utility.NippouPath(ThisMonday.AddDays(i));
                         if (File.Exists(tmp_shuhou_path))
                         {
                             using (StreamReader tmpNippou = new StreamReader(tmp_shuhou_path))
                             {
-                                // まず2行すてる
-                                tmpNippou.ReadLine();
-                                tmpNippou.ReadLine();
-
+                                // 日付を入れる
+                                nippou_buffer += ThisMonday.AddDays(i).ToString("yyyy-MM-dd(ddd)") + "\r\n";
                                 // 一行ずつ読んで本日の作業の部分を書き写す
-                                string buffer = tmpNippou.ReadLine();
-                                while (buffer != null)
+                                string buffer;
+                                while ((buffer = tmpNippou.ReadLine()) != null)
                                 {
-                                    todayShuuho.WriteLine(buffer);
-                                    buffer = tmpNippou.ReadLine();
-                                    if (buffer == "## 翌営業日の作業予定") break;
+                                    if (buffer == Program.nippouTemplate.h_today) break;
+                                }
+                                while ((buffer = tmpNippou.ReadLine()) != null)
+                                {
+                                    if (buffer == Program.nippouTemplate.h_tomorrow) break;
+                                    nippou_buffer += buffer + "\r\n";
                                 }
 
-                                // 今日の分を書き終わったら自習の予定を挿入
+                                // 今日の分を書き終わったら次週の予定を挿入
                                 // 今日の「翌営業日の作業」を使用する
                                 if (i == ThisWeekLength - 1)
                                 {
-                                    todayShuuho.WriteLine("3. 次週の予定\n");
-                                    buffer = tmpNippou.ReadLine();
-                                    while (buffer != null)
+                                    string nippou_tomorrow_buffer = "";
+                                    while ((buffer = tmpNippou.ReadLine()) != null)
                                     {
-                                        todayShuuho.WriteLine(buffer);
-                                        buffer = tmpNippou.ReadLine();
+                                        if (buffer == Program.nippouTemplate.h_other) break;
+                                        nippou_tomorrow_buffer += buffer + "\r\n";
                                     }
+                                    shuhoTemp = shuhoTemp.Replace("<tomorrow />", nippou_tomorrow_buffer);
                                 }
                             }
                         }
                     }
+                    shuhoTemp = shuhoTemp.Replace("<today />", nippou_buffer);
 
-                    todayShuuho.WriteLine("4. 問題点\n\n5. 提案・提言\n\n6. その他\n\n7. 出張・イベント予定\n\n以上\n");
+                    // 不要なタグを消す
+                    shuhoTemp = shuhoTemp.Replace("<h_today>", "").Replace("</h_today>", "");
+                    shuhoTemp = shuhoTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
+                    shuhoTemp = shuhoTemp.Replace("<h_other>", "").Replace("</h_other>", "");
+
+                    // 書き出す
+                    todayShuuho.Write(shuhoTemp);
                 }
             }
 
