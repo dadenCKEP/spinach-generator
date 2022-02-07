@@ -54,6 +54,16 @@ namespace spinach_generator
         /// その他の見出し行(識別用)
         /// </summary>
         public string h_other;
+
+        /// <summary>
+        /// その他の見出し行(識別用)
+        /// </summary>
+        public string h_thisweek;
+
+        /// <summary>
+        /// その他の見出し行(識別用)
+        /// </summary>
+        public string h_nextweek;
     }
 
     static class Program
@@ -159,6 +169,32 @@ namespace spinach_generator
                     if (match.Success)
                     {
                         nippouTemplate.h_other = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                        return;
+                    }
+
+                    // 今週の見出し行
+                    rx = new Regex(@"<h_thisweek>(.*)</h_thisweek>", RegexOptions.IgnoreCase);
+                    match = rx.Match(nippouTemplate.template);
+                    if (match.Success)
+                    {
+                        nippouTemplate.h_thisweek = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
+                        return;
+                    }
+
+                    // 来週の見出し行
+                    rx = new Regex(@"<h_nextweek>(.*)</h_nextweek>", RegexOptions.IgnoreCase);
+                    match = rx.Match(nippouTemplate.template);
+                    if (match.Success)
+                    {
+                        nippouTemplate.h_nextweek = match.Groups[1].Value;
                     }
                     else
                     {

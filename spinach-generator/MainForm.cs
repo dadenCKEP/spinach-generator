@@ -76,7 +76,7 @@ namespace spinach_generator
                             }
 
                             buffer = yesterdayNippou.ReadLine();
-                            while (buffer != null && buffer != Program.nippouTemplate.h_other)
+                            while (buffer != null && buffer != Program.nippouTemplate.h_thisweek)
                             {
                                 yesterday_nippou_tomorrow += buffer + "\r\n";
                                 buffer = yesterdayNippou.ReadLine();
@@ -90,6 +90,12 @@ namespace spinach_generator
                     nippouTemp = nippouTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
                     nippouTemp = nippouTemp.Replace("<h_other>", "").Replace("</h_other>", "");
                     nippouTemp = nippouTemp.Replace("<tomorrow />", "");
+                    // nippouTemp = nippouTemp.Replace("<h_thisweek>", "").Replace("</h_thisweek>", "");
+                    nippouTemp = Regex.Replace(nippouTemp, "<h_thisweek>.*</h_thisweek>", "");
+                    nippouTemp = nippouTemp.Replace("<thisweek />", "");
+                    // nippouTemp = nippouTemp.Replace("<h_nextweek>", "").Replace("</h_nextweek>", "");
+                    nippouTemp = Regex.Replace(nippouTemp, "<h_nextweek>.*</h_nextweek>", "");
+                    nippouTemp = nippouTemp.Replace("<nextweek />", "");
 
                     // 書き出す
                     todayNippou.Write(nippouTemp);
