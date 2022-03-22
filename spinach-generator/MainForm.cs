@@ -113,20 +113,17 @@ namespace spinach_generator
         /// <param name="e"></param>
         private void button_shuhou_Click(object sender, EventArgs e)
         {
-            // 本日分の日報がない場合は一応警告を出す
-            string nippou_path = Utility.NippouPath(DateTime.Now);
-            if (!File.Exists(nippou_path))
-            {
-                DialogResult result = MessageBox.Show("本日分の日報がありません。続けますか？", "注意", MessageBoxButtons.OKCancel);
-                if (result == DialogResult.Cancel) return;
-            }
-
             // 今週の週報がないなら作成
             string shuhou_path = Utility.ShuhouPath(DateTime.Now);
             if (!File.Exists(shuhou_path))
             {
-                // 使用する日付を計算
-                int ThisWeekLength = (int)DateTime.Now.DayOfWeek;
+                // 今日の日報を作成する前に一番若い日付を探す
+                List<string> existNippouFiles = new List<string>();
+                existNippouFiles.AddRange(Directory.GetFiles(Program.nippouSettings.nippouBasePath + "\\" + Program.nippouSettings.nippouDirName + "\\", "*.md", SearchOption.TopDirectoryOnly));
+                existNippouFiles.Sort();
+
+                // 今週は何日間あったかを計算
+                int ThisWeekLength = (int)DateTime.Now.DayOfWeek - 1;   // 本日分は入れない
                 if (ThisWeekLength == 0) ThisWeekLength = 7;    // 日曜日なら0でなく7に
                 DateTime ThisMonday = DateTime.Now.AddDays(1 - ThisWeekLength); // 月曜日のDateTimeを求める
 
@@ -140,6 +137,32 @@ namespace spinach_generator
 
                     // <name>を置き換える
                     shuhoTemp = shuhoTemp.Replace("<name />", Program.nippouSettings.userName);
+
+                    // すでにある日報の中で一番新しいものを探し、
+                    // その日報の「翌営業日の作業予定」から本日の作業を生成する
+                    string yesterday_nippou_tomorrow = "";
+                    if (existNippouFiles.Count > 0)
+                    {
+                        string path_nippou_yesterday = existNippouFiles[existNippouFiles.Count - 1];
+                        using (StreamReader yesterdayNippou = new StreamReader(path_nippou_yesterday))
+                        {
+                            string buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null)
+                            {
+                                buffer = yesterdayNippou.ReadLine();
+                                if (buffer == Program.nippouTemplate.h_tomorrow) break;
+                            }
+
+                            buffer = yesterdayNippou.ReadLine();
+                            while (buffer != null && buffer != Program.nippouTemplate.h_thisweek)
+                            {
+                                yesterday_nippou_tomorrow += buffer + "\r\n";
+                                buffer = yesterdayNippou.ReadLine();
+                            }
+                        }
+                    }
+                    shuhoTemp = shuhoTemp.Replace("<today />", yesterday_nippou_tomorrow);
+
 
                     // 昨日のやつを捜査して翌営業日の作業予定以降を入れる
                     string nippou_buffer = "";
@@ -180,12 +203,15 @@ namespace spinach_generator
                             }
                         }
                     }
-                    shuhoTemp = shuhoTemp.Replace("<today />", nippou_buffer);
+                    shuhoTemp = shuhoTemp.Replace("<thisweek />", nippou_buffer);
 
                     // 不要なタグを消す
                     shuhoTemp = shuhoTemp.Replace("<h_today>", "").Replace("</h_today>", "");
                     shuhoTemp = shuhoTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
                     shuhoTemp = shuhoTemp.Replace("<h_other>", "").Replace("</h_other>", "");
+                    shuhoTemp = shuhoTemp.Replace("<h_thisweek>", "").Replace("</h_thisweek>", "");
+                    shuhoTemp = shuhoTemp.Replace("<h_nextweek>", "").Replace("</h_nextweek>", "");
+                    shuhoTemp = shuhoTemp.Replace("<nextweek />", "");
 
                     // 書き出す
                     todayShuuho.Write(shuhoTemp);
