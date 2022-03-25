@@ -187,7 +187,7 @@ namespace spinach_generator
                                 }
                                 while ((buffer = tmpNippou.ReadLine()) != null)
                                 {
-                                    if (buffer == Program.nippouTemplate.h_tomorrow) break;
+                                    if (buffer == Program.nippouTemplate.h_other) break;
                                     nippou_buffer += buffer + "\r\n";
                                 }
 
@@ -211,6 +211,7 @@ namespace spinach_generator
                     // 不要なタグを消す
                     shuhoTemp = shuhoTemp.Replace("<h_today>", "").Replace("</h_today>", "");
                     shuhoTemp = shuhoTemp.Replace("<h_tomorrow>", "").Replace("</h_tomorrow>", "");
+                    shuhoTemp = shuhoTemp.Replace("<tomorrow />", "");
                     shuhoTemp = shuhoTemp.Replace("<h_other>", "").Replace("</h_other>", "");
                     shuhoTemp = shuhoTemp.Replace("<h_thisweek>", "").Replace("</h_thisweek>", "");
                     shuhoTemp = shuhoTemp.Replace("<h_nextweek>", "").Replace("</h_nextweek>", "");
