@@ -104,6 +104,9 @@ namespace spinach_generator
 
             // 日報を拡張子に関連付けられたソフトウェアで開く
             System.Diagnostics.Process.Start(nippou_path);
+
+            // 終了
+            this.Close();
         }
 
         /// <summary>
@@ -220,6 +223,9 @@ namespace spinach_generator
 
             // 週報を拡張子に関連付けられたソフトウェアで開く
             System.Diagnostics.Process.Start(shuhou_path);
+
+            // 終了
+            this.Close();
         }
 
         /// <summary>
@@ -244,6 +250,9 @@ namespace spinach_generator
                 // なければ警告表示
                 MessageBox.Show("本日の日報がありませんでした");
             }
+
+            // 終了
+            this.Close();
         }
 
         /// <summary>
@@ -268,6 +277,9 @@ namespace spinach_generator
                 // なければ警告表示
                 MessageBox.Show("本日の週報がありませんでした");
             }
+
+            // 終了
+            this.Close();
         }
     }
 }
