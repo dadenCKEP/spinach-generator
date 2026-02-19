@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
-using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 
 namespace spinach_generator
@@ -15,22 +11,17 @@ namespace spinach_generator
         /// <summary>
         /// 日報フォルダの配置先パス
         /// </summary>
-        public string nippouBasePath { get; set; }
+        public string NippouBasePath { get; set; }
 
         /// <summary>
         /// 日報ディレクトリ名
         /// </summary>
-        public string nippouDirName { get; set; }
-
-        /// <summary>
-        /// 週報ディレクトリ名
-        /// </summary>
-        public string shuhouDirName { get; set; }
+        public string NippouDirName { get; set; }
 
         /// <summary>
         /// 日報に載せる名前
         /// </summary>
-        public string userName { get; set; }
+        public string UserName { get; set; }
     }
 
     public class NippouTemplate
@@ -54,16 +45,6 @@ namespace spinach_generator
         /// その他の見出し行(識別用)
         /// </summary>
         public string h_other;
-
-        /// <summary>
-        /// その他の見出し行(識別用)
-        /// </summary>
-        public string h_thisweek;
-
-        /// <summary>
-        /// その他の見出し行(識別用)
-        /// </summary>
-        public string h_nextweek;
     }
 
     static class Program
@@ -169,32 +150,6 @@ namespace spinach_generator
                     if (match.Success)
                     {
                         nippouTemplate.h_other = match.Groups[1].Value;
-                    }
-                    else
-                    {
-                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
-                        return;
-                    }
-
-                    // 今週の見出し行
-                    rx = new Regex(@"<h_thisweek>(.*)</h_thisweek>", RegexOptions.IgnoreCase);
-                    match = rx.Match(nippouTemplate.template);
-                    if (match.Success)
-                    {
-                        nippouTemplate.h_thisweek = match.Groups[1].Value;
-                    }
-                    else
-                    {
-                        MessageBox.Show("テンプレートファイルが破損しています。再セットアップが必要です。");
-                        return;
-                    }
-
-                    // 来週の見出し行
-                    rx = new Regex(@"<h_nextweek>(.*)</h_nextweek>", RegexOptions.IgnoreCase);
-                    match = rx.Match(nippouTemplate.template);
-                    if (match.Success)
-                    {
-                        nippouTemplate.h_nextweek = match.Groups[1].Value;
                     }
                     else
                     {

@@ -6,14 +6,10 @@
 <h_today>## 1. 本⽇の活動報告</h_today>
 <today />
 
-<h_other>## 2. その他</h_other>
-
 <h_tomorrow>## 3. 翌⽇の予定</h_tomorrow>
 <tomorrow />
 
-<h_thisweek>## 4. 今週の報告</h_thisweek>
-<thisweek />
-
-<h_nextweek>## 5. 来週の目標</h_nextweek>
+<h_other>## 2. その他</h_other>
+<other />
 
 以上

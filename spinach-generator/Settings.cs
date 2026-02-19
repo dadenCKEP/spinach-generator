@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace spinach_generator
@@ -32,17 +25,16 @@ namespace spinach_generator
         {
             // バリデーション
             // 空欄がないかどうか
-            if (textBox_dirPath.Text == "" || textBox_nippouDir.Text == "" || textBox_shuhouDir.Text == "" || textBox_userName.Text == "")
+            if (textBox_dirPath.Text == "" || textBox_nippouDir.Text == "" || textBox_userName.Text == "")
             {
                 MessageBox.Show("全ての欄を埋める必要があります。");
                 priventClosing = true;
             }
 
             // 格納
-            Program.nippouSettings.nippouBasePath = textBox_dirPath.Text;
-            Program.nippouSettings.nippouDirName = textBox_nippouDir.Text;
-            Program.nippouSettings.shuhouDirName = textBox_shuhouDir.Text;
-            Program.nippouSettings.userName = textBox_userName.Text;
+            Program.nippouSettings.NippouBasePath = textBox_dirPath.Text;
+            Program.nippouSettings.NippouDirName = textBox_nippouDir.Text;
+            Program.nippouSettings.UserName = textBox_userName.Text;
 
             // ファイル書き出し
             var options = new JsonSerializerOptions
